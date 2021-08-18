@@ -1,38 +1,66 @@
-from collections import namedtuple
-import altair as alt
-import math
-import pandas as pd
+from PIL import Image
 import streamlit as st
+import pandas as pd
 
-"""
-# Welcome to Streamlit!
+st.title('Sales Report')
 
-Edit `/streamlit_app.py` to customize this app to your heart's desire :heart:
+st.header('Q1 Results')
 
-If you have any questions, checkout our [documentation](https://docs.streamlit.io) and [community
-forums](https://discuss.streamlit.io).
+q1_sales = {
+    'January': 100,
+    'February': 110,
+    'March': 115
+}
 
-In the meantime, below is an example of what you can do with just a few lines of code:
-"""
+st.write('January was the start of the year')
+st.write(q1_sales)
 
-color = st.color_picker("Pick a color", '#0068c9')
-# with st.echo(code_location='below'):
-total_points = st.slider("Number of points in spiral", 1, 5000, 2000)
-num_turns = st.slider("Number of turns in spiral", 1, 100, 9)
+st.header('Q2 Results')
 
-Point = namedtuple('Point', 'x y')
-data = []
+q2_sales = {
+    'April': 150,
+    'May': 200,
+    'June': 250
+}
 
-points_per_turn = total_points / num_turns
+'Q2 had better results:smile:'
+q2_df = pd.DataFrame(q2_sales.items(),
+                     columns=['Month', 'Amount'])
+q1_df = pd.DataFrame(q1_sales.items(),
+                     columns=['Month', 'Amount'])
 
-for curr_point_num in range(total_points):
-    curr_turn, i = divmod(curr_point_num, points_per_turn)
-    angle = (curr_turn + 1) * 2 * math.pi * i / points_per_turn
-    radius = curr_point_num / total_points
-    x = radius * math.cos(angle)
-    y = radius * math.sin(angle)
-    data.append(Point(x, y))
+st.table(q2_df)
+st.dataframe(q2_df)
 
-st.altair_chart(alt.Chart(pd.DataFrame(data), height=500, width=500)
-                .mark_circle(color=color, opacity=0.5)
-                .encode(x='x:Q', y='y:Q'))
+
+st.line_chart(q2_df.set_index('Month'))
+st.area_chart(q2_df.set_index('Month'))
+
+st.bar_chart([q1_sales.values(), q2_sales.values()])
+
+st.image(image=Image.open('visualization.png'),
+         caption='Starting from origin')
+
+
+if st.button('Show Q2 Data'):
+    st.table(q2_df)
+else:
+    st.table(q1_df)
+
+if st.checkbox('Show Q2 Data'):
+    st.line_chart(q2_df.set_index('Month'))
+else:
+    st.line_chart(q1_df.set_index('Month'))
+
+quarter = st.radio('Which quarter?', ('Q1', 'Q2'))
+if quarter == 'Q1':
+    st.line_chart(q1_df.set_index('Month'))
+elif quarter == 'Q2':
+    st.line_chart(q2_df.set_index('Month'))
+
+
+selected_quarter = st.selectbox('Which quarter?', ('Q1', 'Q2'))
+if selected_quarter == 'Q1':
+    st.area_chart(q1_df.set_index('Month'))
+elif selected_quarter == 'Q2':
+    st.area_chart(q2_df.set_index('Month'))
