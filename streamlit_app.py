@@ -44,6 +44,7 @@ def main():
                                 'Widgets', 'More widgets',
                                 'Caching'))
     if section == 'Home':
+        st.header('Joudy and Joumana are the best')
         st.image(image=Image.open('joudy_joumana.jpg'),
                  caption='Ribo',
                  use_column_width=True)
