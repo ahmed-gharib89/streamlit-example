@@ -40,9 +40,16 @@ def main():
     q1_df = pd.DataFrame(q1_sales.items(),
                          columns=['Month', 'Amount'])
     section = st.sidebar.radio('Which section?',
-                               ('Text', 'Charts',
+                               ('Home', 'Text', 'Charts',
                                 'Widgets', 'More widgets',
                                 'Caching'))
+    if section == 'Home':
+        st.image(image=Image.open('joudy_joumana.jpg'),
+                 caption='Ribo',
+                 use_column_width=True)
+        st.markdown('**Ribo** is a **streamlit** app that is used to '
+                    'demonstrate how to use **streamlit** to create '
+                    'interactive web apps.')
     if section == 'Text':
         show_text(q1_sales, q2_df)
     elif section == 'Charts':
